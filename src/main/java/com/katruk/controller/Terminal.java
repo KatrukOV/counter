@@ -1,6 +1,5 @@
 package com.katruk.controller;
 
-import com.katruk.io.in.ConsoleReader;
 import com.katruk.io.in.Reader;
 import com.katruk.io.out.Display;
 
@@ -9,7 +8,7 @@ public class Terminal {
     private final Reader reader;
     private final Display display;
 
-    public Terminal(final ConsoleReader reader, final Display display) {
+    public Terminal(final Reader reader, final Display display) {
         this.reader = reader;
         this.display = display;
     }

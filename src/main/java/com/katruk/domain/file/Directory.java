@@ -15,9 +15,9 @@ import static java.util.Objects.isNull;
 
 public class Directory implements File {
 
-    private Set<Directory> subDirectories = new HashSet<>();
-    private PathName path;
-    private String name;
+    private final Set<Directory> subDirectories = new HashSet<>();
+    private final PathName path;
+    private final String name;
     private File file;
 
     public Directory(final PathName path, String name) {
@@ -30,17 +30,6 @@ public class Directory implements File {
                 new FilePathName(absolutePath, rootPath, name),
                 name
         );
-    }
-
-    public Set<Directory> subDirectories() {
-        return this.subDirectories;
-    }
-
-    public Directory getByName(final String name) {
-        return this.subDirectories.stream()
-                .filter(e -> name.equals(e.name))
-                .findAny()
-                .orElse(null);
     }
 
     @Override
@@ -59,6 +48,47 @@ public class Directory implements File {
                     .sum();
         }
         return count;
+    }
+
+    public Set<Directory> subDirectories() {
+        return this.subDirectories;
+    }
+
+    public Directory getByName(final String name) {
+        return this.subDirectories.stream()
+                .filter(e -> name.equals(e.name))
+                .findAny()
+                .orElse(null);
+    }
+
+    public StringBuilder show(final StringBuilder sb) {
+        sb.append(this.path.prettyName());
+        sb.append(":");
+        if (this.subDirectories.isEmpty()) {
+            sb.append(this.file().lineCount());
+            sb.append("\n");
+        } else {
+            int count = this.subDirectories.stream()
+                    .mapToInt(Directory::lineCount)
+                    .sum();
+            sb.append(count);
+            sb.append("\n");
+            this.subDirectories.forEach(e -> e.show(sb));
+        }
+        return sb;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Directory that = (Directory) o;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name);
     }
 
     private File file() {
@@ -86,36 +116,6 @@ public class Directory implements File {
             throw new RuntimeException(e);
         }
         return new JavaFile(sb.toString());
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Directory that = (Directory) o;
-        return name.equals(that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.name);
-    }
-
-    public StringBuilder show(final StringBuilder sb) {
-        sb.append(this.path.prettyName());
-        sb.append(":");
-        if (this.subDirectories.isEmpty()) {
-            sb.append(this.file().lineCount());
-            sb.append("\n");
-        } else {
-            int count = this.subDirectories.stream()
-                    .mapToInt(Directory::lineCount)
-                    .sum();
-            sb.append(count);
-            sb.append("\n");
-            this.subDirectories.forEach(e -> e.show(sb));
-        }
-        return sb;
     }
 
 }

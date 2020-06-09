@@ -16,9 +16,16 @@ public class DirectoryTree {
     private final String rootPath;
     private final Directory root;
 
-    public DirectoryTree(final String rootPath) {
+    public DirectoryTree(final String rootPath, final Directory root) {
         this.rootPath = rootPath;
-        this.root = new Directory(rootPath, rootPath, rootPath);
+        this.root = root;
+    }
+
+    public DirectoryTree(final String rootPath) {
+        this(
+                rootPath,
+                new Directory(rootPath, rootPath, rootPath)
+        );
     }
 
     public void build(final Set<String> paths) {
