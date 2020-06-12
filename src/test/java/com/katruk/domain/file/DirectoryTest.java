@@ -64,7 +64,7 @@ public class DirectoryTest {
                 "        final String cleanContent = content.replaceAll(, );\n" +
                 "        return cleanContent.replaceAll(, );\n" +
                 "    }\n" +
-                "}\n";
+                "}";
 
         //when
         final String result = this.directory.content();
